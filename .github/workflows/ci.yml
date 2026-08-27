@@ -1,0 +1,28 @@
+name: macOS checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-package:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test without changing power state
+        run: ./scripts/test.sh
+      - name: Build app bundle
+        run: ./scripts/build.sh
+      - name: Verify app bundle
+        run: ./scripts/check_release.sh
+      - name: Package and verify checksum
+        run: ./scripts/release.sh
+      - name: Reject machine-specific source paths
+        run: |
+          if git grep -n -E '/Users/[A-Za-z0-9_-]+/'; then
+            echo 'Absolute user path found in tracked source.' >&2
+            exit 1
+          fi
