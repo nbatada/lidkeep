@@ -1,9 +1,0 @@
-.DS_Store
-build/
-dist/*
-!dist/.gitkeep
-*.xcuserstate
-DerivedData/
-.swiftpm/
-.env
-*.log
